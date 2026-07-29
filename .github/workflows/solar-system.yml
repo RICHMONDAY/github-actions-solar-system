@@ -85,9 +85,13 @@ jobs:
               username: ${{ github.actor }}
               password: ${{ secrets.GITHUB_TOKEN }}
 
+          - name: convert repo name to lowercase
+            id: convert
+            run: echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
           - name: Build and Push Docker Image
             uses: docker/build-push-action@v5
             with:
               context: .
               push: true
-              tags: ghcr.io/${{github.repository}}/solar-system:${{ github.sha }}
+              tags: ghcr.io/${{ env.REPO_NAME }}/solar-system:${{ github.sha }}
